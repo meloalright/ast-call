@@ -59,7 +59,8 @@ ast-call/
 │
 └── .github/workflows/
     ├── ci.yml                          # build, test, clippy, fmt
-    └── showcase.yml                    # index + query the sample project
+    ├── showcase.yml                    # index + query the sample project
+    └── release.yml                     # build binaries + update Homebrew tap
 ```
 
 ### Crate Dependency Graph
@@ -262,6 +263,74 @@ Every `call_expression` node produces a `Reference` with:
 
 ---
 
+## Call Resolution (Phase 4)
+
+After indexing, `resolve_all_calls()` runs a second pass over every file's unresolved call refs. For each call site, three strategies are tried in order:
+
+```
+ Strategy              Confidence   When
+ ──────────────────────────────────────────────────────────
+ 1. Import match       0.75         callee name matches an import's local_name,
+                                    and the import's qualified_target resolves to
+                                    exactly one symbol (tries both exact path and
+                                    crate::-prefixed)
+ 2. Same-file match    0.60         callee name matches a symbol defined in the
+                                    same file
+ 3. Global unique      0.45         callee name matches exactly one symbol across
+                                    the entire index
+```
+
+If global lookup finds multiple candidates, an `Ambiguous` call edge is stored with all candidate IDs and confidence 0.25.
+
+The callee name is extracted from the call expression text:
+- `render_text(ctx)` → `render_text`
+- `ctx.render_text()` → `render_text` (after last `.`)
+- `Foo::new()` → `new` (after last `::`)
+
+---
+
+## Release & Installation
+
+### Release Pipeline (`.github/workflows/release.yml`)
+
+Triggered on GitHub release publish:
+
+```
+ release published
+     │
+     ├─ Build 4 targets in parallel:
+     │   ├─ aarch64-apple-darwin   (macOS ARM, native)
+     │   ├─ x86_64-apple-darwin    (macOS Intel, native)
+     │   ├─ x86_64-unknown-linux-gnu (Linux x86_64, native)
+     │   └─ aarch64-unknown-linux-gnu (Linux ARM, cross)
+     │
+     ├─ Package each as ast-call-<target>.tar.gz
+     │
+     ├─ Upload to GitHub release assets
+     │
+     └─ Homebrew job (after all builds):
+         ├─ Download all 4 tarballs
+         ├─ Compute SHA256 for each
+         ├─ Generate ast-call.rb formula with version + checksums
+         └─ Push to meloalright/homebrew-tap (Formula/ast-call.rb)
+```
+
+### Installation
+
+```sh
+# Homebrew (macOS / Linux)
+brew tap meloalright/tap
+brew install ast-call
+
+# From source
+cargo install --path crates/ast-call-cli
+
+# From GitHub release
+gh release download v0.0.1 --repo meloalright/ast-call --pattern 'ast-call-*.tar.gz'
+```
+
+---
+
 ## Confidence Scoring
 
 Each reference and call edge carries a confidence score (0.0–1.0) computed by additive/subtractive signals:
@@ -306,12 +375,14 @@ Each reference and call edge carries a confidence score (0.0–1.0) computed by 
 
 ## Implementation Status
 
-### Implemented (Phases 1–3, 5–6 partial)
+### Implemented (Phases 1–6 partial)
 
 - Target parsing: all 5 formats
 - Rust symbol extraction: functions, methods, trait methods, trait decls
 - Import extraction: simple, aliased, scoped lists
 - Call site discovery: all `call_expression` nodes
+- Import-aware call resolution (Phase 4): import match (0.75), same-file (0.60), global unique (0.45)
+- Module path derivation from file paths for qualified names
 - SQLite index: schema, CRUD, incremental hash-based re-indexing
 - All 6 CLI commands: `index`, `callers`, `def`, `refs`, `impl`, `impact`
 - Output: human, JSON, NDJSON, quickfix
@@ -322,7 +393,6 @@ Each reference and call edge carries a confidence score (0.0–1.0) computed by 
 
 | Area                         | Status | Notes                                          |
 |------------------------------|--------|-------------------------------------------------|
-| Import-aware call resolution | Stub   | Phase 4: connect calls to symbols via `use` paths |
 | Explain mode (`--why`)       | Stub   | Phase 6: populate `why` vectors in JSON output  |
 | Watch mode (`--watch`)       | Parsed | Flag accepted but no file watcher               |
 | TypeScript parser            | —      | Language detected, no parser crate               |
