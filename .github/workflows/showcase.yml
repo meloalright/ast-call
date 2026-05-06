@@ -79,3 +79,34 @@ jobs:
           cd samples/rust-project
           echo "$ ast-call src/text/render.rs:3 --json --why"
           ../../target/release/ast-call src/text/render.rs:3 --json --why || true
+
+      - name: "Edge case: comments should not appear as callers"
+        run: |
+          cd samples/rust-project
+          echo "--- commented_out_call has // render_text(...) in comments ---"
+          echo "--- it must NOT appear in callers of render::render_text ---"
+          echo ""
+          echo "$ ast-call src/text/render.rs:3 --json"
+          OUTPUT=$(../../target/release/ast-call src/text/render.rs:3 --json || true)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "commented_out_call"; then
+            echo "::error::FAIL: commented_out_call appeared as a caller — comment was parsed as a call"
+            exit 1
+          fi
+          echo "PASS: commented_out_call correctly excluded"
+
+      - name: "Edge case: same-name fn that does not call target should not appear"
+        run: |
+          cd samples/rust-project
+          echo "--- edge_cases::render_text is a DIFFERENT fn with the same name ---"
+          echo "--- calls_local_render_text calls edge_cases::render_text, not render::render_text ---"
+          echo "--- neither should appear as callers of render::render_text ---"
+          echo ""
+          echo "$ ast-call src/text/render.rs:3 --json"
+          OUTPUT=$(../../target/release/ast-call src/text/render.rs:3 --json || true)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "calls_local_render_text"; then
+            echo "::error::FAIL: calls_local_render_text appeared as a caller — wrong render_text resolved"
+            exit 1
+          fi
+          echo "PASS: calls_local_render_text correctly excluded"
