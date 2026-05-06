@@ -1,0 +1,149 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            os: macos-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install cross (Linux aarch64)
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Build (native)
+        if: matrix.target != 'aarch64-unknown-linux-gnu'
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Build (cross)
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: cross build --release --target ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          cd target/${{ matrix.target }}/release
+          tar czf ../../../ast-call-${{ matrix.target }}.tar.gz ast-call
+          cd ../../..
+
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload ${{ github.event.release.tag_name }} ast-call-${{ matrix.target }}.tar.gz --clobber
+
+  homebrew:
+    name: Update Homebrew tap
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for assets
+        run: sleep 5
+
+      - name: Download release assets and compute SHA256
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION_NUM="${VERSION#v}"
+
+          for target in aarch64-apple-darwin x86_64-apple-darwin x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu; do
+            gh release download "$VERSION" \
+              --repo meloalright/ast-call \
+              --pattern "ast-call-${target}.tar.gz"
+            SHA=$(sha256sum "ast-call-${target}.tar.gz" | cut -d' ' -f1)
+            echo "SHA_${target//-/_}=$SHA" >> "$GITHUB_ENV"
+          done
+
+          echo "VERSION_NUM=$VERSION_NUM" >> "$GITHUB_ENV"
+          echo "VERSION_TAG=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Generate formula
+        run: |
+          cat > ast-call.rb << 'FORMULA'
+          class AstCall < Formula
+            desc "A location-first semantic caller analysis CLI"
+            homepage "https://github.com/meloalright/ast-call"
+            version "VERSION_PLACEHOLDER"
+            license "MIT"
+
+            on_macos do
+              if Hardware::CPU.arm?
+                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/ast-call-aarch64-apple-darwin.tar.gz"
+                sha256 "SHA_AARCH64_APPLE_PLACEHOLDER"
+              else
+                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/ast-call-x86_64-apple-darwin.tar.gz"
+                sha256 "SHA_X86_64_APPLE_PLACEHOLDER"
+              end
+            end
+
+            on_linux do
+              if Hardware::CPU.arm?
+                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/ast-call-aarch64-unknown-linux-gnu.tar.gz"
+                sha256 "SHA_AARCH64_LINUX_PLACEHOLDER"
+              else
+                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/ast-call-x86_64-unknown-linux-gnu.tar.gz"
+                sha256 "SHA_X86_64_LINUX_PLACEHOLDER"
+              end
+            end
+
+            def install
+              bin.install "ast-call"
+            end
+
+            test do
+              assert_match "ast-call", shell_output("#{bin}/ast-call --version")
+            end
+          end
+          FORMULA
+
+          sed -i "s/VERSION_PLACEHOLDER/$VERSION_NUM/g" ast-call.rb
+          sed -i "s/TAG_PLACEHOLDER/$VERSION_TAG/g" ast-call.rb
+          sed -i "s/SHA_AARCH64_APPLE_PLACEHOLDER/$SHA_aarch64_apple_darwin/g" ast-call.rb
+          sed -i "s/SHA_X86_64_APPLE_PLACEHOLDER/$SHA_x86_64_apple_darwin/g" ast-call.rb
+          sed -i "s/SHA_AARCH64_LINUX_PLACEHOLDER/$SHA_aarch64_unknown_linux_gnu/g" ast-call.rb
+          sed -i "s/SHA_X86_64_LINUX_PLACEHOLDER/$SHA_x86_64_unknown_linux_gnu/g" ast-call.rb
+
+          echo "=== Generated formula ==="
+          cat ast-call.rb
+
+      - name: Push to homebrew-tap
+        env:
+          TAP_TOKEN: ${{ secrets.TAP_TOKEN }}
+        run: |
+          git clone https://x-access-token:${TAP_TOKEN}@github.com/meloalright/homebrew-tap.git tap
+          mkdir -p tap/Formula
+          cp ast-call.rb tap/Formula/ast-call.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/ast-call.rb
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Update ast-call to $VERSION_NUM"
+          git push
