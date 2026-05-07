@@ -337,11 +337,7 @@ impl RustParser {
                         start_col: child.start_position().column as u32 + 1,
                         end_line: child.end_position().row as u32 + 1,
                         end_col: child.end_position().column as u32 + 1,
-                        text: if call_text.len() > 120 {
-                            format!("{}...", &call_text[..117])
-                        } else {
-                            call_text
-                        },
+                        text: truncate_utf8(&call_text, 120),
                         confidence: 0.0,
                     });
                     let _ = callee_name; // used during resolution phase
@@ -498,5 +494,61 @@ fn extract_signature(node: Node, source: &[u8]) -> String {
             .next()
             .unwrap_or("")
             .to_string()
+    }
+}
+
+fn truncate_utf8(s: &str, max_bytes: usize) -> String {
+    if s.len() <= max_bytes {
+        return s.to_string();
+    }
+    let mut end = max_bytes.saturating_sub(3);
+    while end > 0 && !s.is_char_boundary(end) {
+        end -= 1;
+    }
+    format!("{}...", &s[..end])
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn truncate_ascii_short() {
+        assert_eq!(truncate_utf8("hello", 120), "hello");
+    }
+
+    #[test]
+    fn truncate_ascii_long() {
+        let long = "a".repeat(200);
+        let result = truncate_utf8(&long, 120);
+        assert!(result.len() <= 120);
+        assert!(result.ends_with("..."));
+    }
+
+    #[test]
+    fn truncate_chinese_no_panic() {
+        let chinese = "你好世界".repeat(30);
+        let result = truncate_utf8(&chinese, 120);
+        assert!(result.len() <= 120);
+        assert!(result.ends_with("..."));
+        // Must not split a 3-byte Chinese character
+        assert!(result.is_char_boundary(result.len()));
+    }
+
+    #[test]
+    fn truncate_mixed_scripts() {
+        let mixed = "Hello 世界 こんにちは мир 🌍 ".repeat(10);
+        let result = truncate_utf8(&mixed, 120);
+        assert!(result.len() <= 120);
+        assert!(result.ends_with("..."));
+    }
+
+    #[test]
+    fn truncate_emoji_boundary() {
+        // 🌍 is 4 bytes — ensure we don't slice in the middle
+        let s = "x".repeat(116) + "🌍🌍";
+        let result = truncate_utf8(&s, 120);
+        assert!(result.len() <= 120);
+        assert!(result.ends_with("..."));
     }
 }
