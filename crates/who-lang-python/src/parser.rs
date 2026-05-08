@@ -245,29 +245,28 @@ impl PythonParser {
         let mut cursor = node.walk();
         for child in node.children(&mut cursor) {
             match child.kind() {
-                "dotted_name" | "identifier" => {
+                "dotted_name" | "identifier"
                     if child.start_byte()
                         > node
                             .child_by_field_name("module_name")
                             .map(|n| n.end_byte())
-                            .unwrap_or(0)
-                    {
-                        let name = node_text(child, source).to_string();
-                        let qualified = if module.is_empty() {
-                            name.clone()
-                        } else {
-                            format!("{module}.{name}")
-                        };
-                        imports.push(Import {
-                            id: 0,
-                            file_id,
-                            local_name: name,
-                            qualified_target: qualified,
-                            alias: None,
-                            start_line: child.start_position().row as u32 + 1,
-                            start_col: child.start_position().column as u32 + 1,
-                        });
-                    }
+                            .unwrap_or(0) =>
+                {
+                    let name = node_text(child, source).to_string();
+                    let qualified = if module.is_empty() {
+                        name.clone()
+                    } else {
+                        format!("{module}.{name}")
+                    };
+                    imports.push(Import {
+                        id: 0,
+                        file_id,
+                        local_name: name,
+                        qualified_target: qualified,
+                        alias: None,
+                        start_line: child.start_position().row as u32 + 1,
+                        start_col: child.start_position().column as u32 + 1,
+                    });
                 }
                 "aliased_import" => {
                     let name_node = child.child_by_field_name("name");
