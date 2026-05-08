@@ -55,3 +55,15 @@ jobs:
           cd samples/python-project
           echo "$ whocall format_output --json"
           ../../target/release/whocall format_output --json || true
+
+      - name: "Demo: whoimpl (human)"
+        run: |
+          cd samples/python-project
+          echo "$ whoimpl src/models.py:5"
+          ../../target/release/whoimpl src/models.py:5 || true
+
+      - name: "Demo: whoimpl (JSON)"
+        run: |
+          cd samples/python-project
+          echo "$ whoimpl src/models.py:5 --json"
+          ../../target/release/whoimpl src/models.py:5 --json || true
