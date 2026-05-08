@@ -44,11 +44,17 @@ jobs:
           echo "$ whocall src/text/render.rs:3 --json"
           ../../target/release/whocall src/text/render.rs:3 --json || true
 
-      - name: "Demo: whoimpl"
+      - name: "Demo: whoimpl (human)"
         run: |
           cd samples/rust-project
           echo "$ whoimpl src/traits.rs:5"
           ../../target/release/whoimpl src/traits.rs:5 || true
+
+      - name: "Demo: whoimpl (JSON)"
+        run: |
+          cd samples/rust-project
+          echo "$ whoimpl src/traits.rs:5 --json"
+          ../../target/release/whoimpl src/traits.rs:5 --json || true
 
       - name: "Edge case: comments should not appear as callers"
         run: |
