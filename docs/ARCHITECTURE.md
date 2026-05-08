@@ -172,7 +172,7 @@ Triggered on GitHub release publish:
      │
      ├─ Upload to GitHub release assets
      │
-     └─ Homebrew job: generate who.rb formula → push to meloalright/homebrew-tap
+     └─ Homebrew job: generate whocall.rb + whoimpl.rb → push to meloalright/homebrew-tap
 ```
 
 ### Installation
@@ -180,7 +180,8 @@ Triggered on GitHub release publish:
 ```sh
 # Homebrew (macOS / Linux)
 brew tap meloalright/tap
-brew install who
+brew install whocall
+brew install whoimpl
 
 # From source
 cargo install --path crates/who-cli
