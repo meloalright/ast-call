@@ -47,8 +47,8 @@ jobs:
       - name: "Demo: whocall file#symbol"
         run: |
           cd samples/python-project
-          echo "$ whocall src/utils.py#render_text"
-          ../../target/release/whocall src/utils.py#render_text || true
+          echo "$ whocall src/utils.py#format_output"
+          ../../target/release/whocall src/utils.py#format_output || true
 
       - name: "Demo: whoimpl (human)"
         run: |
