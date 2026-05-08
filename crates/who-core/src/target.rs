@@ -3,14 +3,8 @@ use std::str::FromStr;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Target {
-    FileLine {
-        file: String,
-        line: u32,
-    },
-    FileSymbol {
-        file: String,
-        symbol: String,
-    },
+    FileLine { file: String, line: u32 },
+    FileSymbol { file: String, symbol: String },
 }
 
 impl Target {
@@ -59,7 +53,9 @@ impl FromStr for Target {
             }
         }
 
-        Err(format!("invalid target '{s}': use file:line or file#symbol"))
+        Err(format!(
+            "invalid target '{s}': use file:line or file#symbol"
+        ))
     }
 }
 
