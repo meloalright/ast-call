@@ -75,7 +75,7 @@ jobs:
 
           for target in aarch64-apple-darwin x86_64-apple-darwin x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu; do
             gh release download "$VERSION" \
-              --repo meloalright/ast-call \
+              --repo meloalright/who-ast \
               --pattern "who-${target}.tar.gz"
             SHA=$(sha256sum "who-${target}.tar.gz" | cut -d' ' -f1)
             echo "SHA_${target//-/_}=$SHA" >> "$GITHUB_ENV"
@@ -89,26 +89,26 @@ jobs:
           cat > who.rb << 'FORMULA'
           class Who < Formula
             desc "Semantic code intelligence for humans and AI agents"
-            homepage "https://github.com/meloalright/ast-call"
+            homepage "https://github.com/meloalright/who-ast"
             version "VERSION_PLACEHOLDER"
             license "MIT"
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/who-aarch64-apple-darwin.tar.gz"
+                url "https://github.com/meloalright/who-ast/releases/download/TAG_PLACEHOLDER/who-aarch64-apple-darwin.tar.gz"
                 sha256 "SHA_AARCH64_APPLE_PLACEHOLDER"
               else
-                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/who-x86_64-apple-darwin.tar.gz"
+                url "https://github.com/meloalright/who-ast/releases/download/TAG_PLACEHOLDER/who-x86_64-apple-darwin.tar.gz"
                 sha256 "SHA_X86_64_APPLE_PLACEHOLDER"
               end
             end
 
             on_linux do
               if Hardware::CPU.arm?
-                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/who-aarch64-unknown-linux-gnu.tar.gz"
+                url "https://github.com/meloalright/who-ast/releases/download/TAG_PLACEHOLDER/who-aarch64-unknown-linux-gnu.tar.gz"
                 sha256 "SHA_AARCH64_LINUX_PLACEHOLDER"
               else
-                url "https://github.com/meloalright/ast-call/releases/download/TAG_PLACEHOLDER/who-x86_64-unknown-linux-gnu.tar.gz"
+                url "https://github.com/meloalright/who-ast/releases/download/TAG_PLACEHOLDER/who-x86_64-unknown-linux-gnu.tar.gz"
                 sha256 "SHA_X86_64_LINUX_PLACEHOLDER"
               end
             end

@@ -30,7 +30,7 @@ jobs:
           ../../target/release/who index .
           echo ""
           echo "=== metadata ==="
-          cat .who/metadata.json
+          cat .who-ast/metadata.json
 
       - name: "Demo: whocall render_text (human)"
         run: |

@@ -11,7 +11,7 @@ Source Files
      |
   Symbol + Import + Call Extraction
      |
-  SQLite Index  (.who/index.sqlite)
+  SQLite Index  (.who-ast/index.sqlite)
      |
   Target Resolution + Query
      |
@@ -193,7 +193,7 @@ brew install who
 cargo install --path crates/who-cli
 
 # From GitHub release
-gh release download --repo meloalright/ast-call --pattern 'who-*.tar.gz'
+gh release download --repo meloalright/who-ast --pattern 'who-*.tar.gz'
 ```
 
 ---

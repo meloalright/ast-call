@@ -39,7 +39,7 @@ pub fn find_index_path() -> Result<std::path::PathBuf> {
     let cwd = std::env::current_dir()?;
     let mut dir = cwd.as_path();
     loop {
-        let candidate = dir.join(".who/index.sqlite");
+        let candidate = dir.join(".who-ast/index.sqlite");
         if candidate.exists() {
             return Ok(candidate);
         }
