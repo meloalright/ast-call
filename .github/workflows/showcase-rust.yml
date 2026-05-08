@@ -1,4 +1,4 @@
-name: Showcase
+name: "Showcase: Rust"
 
 on:
   push:
@@ -10,8 +10,8 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  showcase:
-    name: Run who-ast on samples
+  showcase-rust:
+    name: Run who-ast on Rust samples
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
