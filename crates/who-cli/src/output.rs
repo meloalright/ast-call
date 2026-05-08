@@ -3,6 +3,7 @@ use who_core::confidence::ConfidenceLabel;
 use who_core::resolve::CallerResult;
 use who_core::symbol::Symbol;
 
+#[allow(dead_code)]
 pub struct OutputOpts {
     pub json: bool,
     pub ndjson: bool,

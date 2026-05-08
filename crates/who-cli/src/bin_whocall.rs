@@ -1,5 +1,5 @@
+#[allow(dead_code)]
 mod cmd_callers;
-mod cmd_index;
 mod output;
 
 use std::process;

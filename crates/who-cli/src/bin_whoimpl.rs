@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 mod cmd_callers;
 mod cmd_impl;
 mod output;
