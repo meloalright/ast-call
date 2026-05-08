@@ -50,12 +50,6 @@ jobs:
           echo "$ whocall src/models.py:6"
           ../../target/release/whocall src/models.py:6 || true
 
-      - name: "Demo: whocall format_output"
-        run: |
-          cd samples/python-project
-          echo "$ whocall format_output --json"
-          ../../target/release/whocall format_output --json || true
-
       - name: "Demo: whoimpl (human)"
         run: |
           cd samples/python-project
