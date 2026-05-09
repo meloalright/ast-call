@@ -5,10 +5,6 @@ REPO="meloalright/who-ast"
 BIN="whocall"
 INSTALL_DIR="/usr/local/bin"
 
-get_latest_version() {
-  curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name"' | sed 's/.*"v\(.*\)".*/\1/'
-}
-
 get_target() {
   OS=$(uname -s)
   ARCH=$(uname -m)
@@ -22,11 +18,10 @@ get_target() {
   esac
 }
 
-VERSION=$(get_latest_version)
 TARGET=$(get_target)
-URL="https://github.com/${REPO}/releases/download/v${VERSION}/who-${TARGET}.tar.gz"
+URL="https://github.com/${REPO}/releases/latest/download/who-${TARGET}.tar.gz"
 
-echo "Installing ${BIN} v${VERSION} (${TARGET})..."
+echo "Installing ${BIN} (${TARGET})..."
 
 TMP=$(mktemp -d)
 curl -fsSL "${URL}" -o "${TMP}/who.tar.gz"
@@ -41,4 +36,4 @@ fi
 chmod +x "${INSTALL_DIR}/${BIN}"
 rm -rf "${TMP}"
 
-echo "${BIN} v${VERSION} installed to ${INSTALL_DIR}/${BIN}"
+echo "${BIN} installed to ${INSTALL_DIR}/${BIN}"
