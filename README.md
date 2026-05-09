@@ -3,6 +3,9 @@
 
 # whocall + whoimpl
 
+[![CI](https://github.com/meloalright/who-ast/actions/workflows/ci.yml/badge.svg)](https://github.com/meloalright/who-ast/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 code analysis tools applicable to both human and AI agents.
 
 `whocall` answers questions like **"who calls this function?"**
@@ -78,8 +81,3 @@ Implementations:
 - [ ] TypeScript/JavaScript
 - [ ] Go
 - [ ] Java
-
-
-## License
-
-MIT
