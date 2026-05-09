@@ -4,7 +4,7 @@
 
 # who-ast (whocall + whoimpl)
 
-[![CI](https://github.com/rustq/tear/actions/workflows/ci.yml/badge.svg)](https://github.com/rustq/tear/actions/workflows/ci.yml) [![license](https://img.shields.io/badge/license-MIT-cyan)](https://revolunet.mit-license.org/) [![homebrew](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmeloalright%2Fhomebrew-tap%2Frefs%2Fheads%2Fmain%2FFormula%2Fwhocall.rb&search=version%20%22(%3F%3Cversion%3E%5Cd%2B(%3F%3A%5C.%5Cd%2B)%2B)%22&replace=%24%3Cversion%3E&label=homebrew&color=orange)](https://github.com/meloalright/homebrew-tap) [![npm](https://img.shields.io/npm/v/@whocall/cli?color=red)](https://www.npmjs.com/package/@whocall/cli)
+[![CI](https://github.com/rustq/tear/actions/workflows/ci.yml/badge.svg)](https://github.com/rustq/tear/actions/workflows/ci.yml) [![license](https://img.shields.io/github/license/meloalright/who-ast)](https://github.com/meloalright/who-ast/blob/master/LICENSE) [![homebrew](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmeloalright%2Fhomebrew-tap%2Frefs%2Fheads%2Fmain%2FFormula%2Fwhocall.rb&search=version%20%22(%3F%3Cversion%3E%5Cd%2B(%3F%3A%5C.%5Cd%2B)%2B)%22&replace=%24%3Cversion%3E&label=homebrew&color=orange)](https://github.com/meloalright/homebrew-tap) [![npm](https://img.shields.io/npm/v/@whocall/cli?color=red)](https://www.npmjs.com/package/@whocall/cli)
 
 code analysis tools applicable to both human and AI agents.
 
