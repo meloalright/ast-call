@@ -7,6 +7,10 @@ Semantic code intelligence for humans and AI agents.
 ## Install
 
 ```sh
+# Shell (macOS / Linux)
+curl -fsSL https://raw.githubusercontent.com/meloalright/who-ast/master/install-whocall.sh | sh
+curl -fsSL https://raw.githubusercontent.com/meloalright/who-ast/master/install-whoimpl.sh | sh
+
 # Homebrew (macOS / Linux)
 brew tap meloalright/tap
 brew install whocall
@@ -14,9 +18,6 @@ brew install whoimpl
 
 # From source
 cargo install --path crates/who-cli
-
-# From GitHub release
-gh release download --repo meloalright/who-ast --pattern 'who-*.tar.gz'
 ```
 
 ## Usage
