@@ -54,11 +54,11 @@ Confidence: high 0.75
 
 ## Supported Languages
 
-[x] Rust
-[x] Python
-[ ] TypeScript/JavaScript
-[ ] Go
-[ ] Java
+- [x] Rust
+- [x] Python
+- [ ] TypeScript/JavaScript
+- [ ] Go
+- [ ] Java
 
 
 ## License
