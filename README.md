@@ -1,4 +1,6 @@
-<img height="512" alt="ChatGPT Image 2026年5月10日 02_44_55" src="https://github.com/user-attachments/assets/b2cb72d7-f386-4b84-a9eb-8d9a99705896" />
+<div align="center">
+ <img height="512" alt="preview" src="https://github.com/user-attachments/assets/b2cb72d7-f386-4b84-a9eb-8d9a99705896" />
+</div>
 
 # whocall + whoimpl
 
