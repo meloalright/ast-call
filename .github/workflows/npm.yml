@@ -1,0 +1,60 @@
+name: npm publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  npm:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Wait for release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          for i in $(seq 1 30); do
+            ASSETS=$(gh release view "$VERSION" --repo ${{ github.repository }} --json assets -q '.assets | length')
+            if [ "$ASSETS" -ge 4 ]; then
+              echo "All 4 assets available"
+              break
+            fi
+            echo "Found $ASSETS assets, waiting... ($i/30)"
+            sleep 10
+          done
+
+      - name: Update versions
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION_NUM="${VERSION#v}"
+
+          for pkg in whocall-cli whoimpl-cli; do
+            cd npm/$pkg
+            node -e "
+              const pkg = require('./package.json');
+              pkg.version = '${VERSION_NUM}';
+              require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+            "
+            cat package.json
+            cd ../..
+          done
+
+      - name: Publish @whocall/cli
+        working-directory: npm/whocall-cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+
+      - name: Publish @whoimpl/cli
+        working-directory: npm/whoimpl-cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

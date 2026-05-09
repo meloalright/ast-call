@@ -7,6 +7,10 @@ Semantic code intelligence for humans and AI agents.
 ## Install
 
 ```sh
+# npm (recommended)
+npm install -g @whocall/cli
+npm install -g @whoimpl/cli
+
 # Shell (macOS / Linux)
 curl -fsSL https://raw.githubusercontent.com/meloalright/who-ast/master/install-whocall.sh | sh
 curl -fsSL https://raw.githubusercontent.com/meloalright/who-ast/master/install-whoimpl.sh | sh

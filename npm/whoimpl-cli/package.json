@@ -1,0 +1,31 @@
+{
+  "name": "@whoimpl/cli",
+  "version": "0.0.8",
+  "description": "Semantic code intelligence — find implementations of traits and interfaces",
+  "homepage": "https://github.com/meloalright/who-ast",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meloalright/who-ast.git"
+  },
+  "license": "MIT",
+  "bin": {
+    "whoimpl": "bin/whoimpl"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "bin",
+    "install.js"
+  ],
+  "keywords": [
+    "code-intelligence",
+    "ast",
+    "implementations",
+    "tree-sitter",
+    "semantic",
+    "ai-agent",
+    "cli"
+  ],
+  "author": "meloalright"
+}

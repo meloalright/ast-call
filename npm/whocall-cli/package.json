@@ -1,0 +1,31 @@
+{
+  "name": "@whocall/cli",
+  "version": "0.0.8",
+  "description": "Semantic code intelligence — find callers of a symbol",
+  "homepage": "https://github.com/meloalright/who-ast",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meloalright/who-ast.git"
+  },
+  "license": "MIT",
+  "bin": {
+    "whocall": "bin/whocall"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "bin",
+    "install.js"
+  ],
+  "keywords": [
+    "code-intelligence",
+    "ast",
+    "callers",
+    "tree-sitter",
+    "semantic",
+    "ai-agent",
+    "cli"
+  ],
+  "author": "meloalright"
+}
