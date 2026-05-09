@@ -1,3 +1,5 @@
+<img height="512" alt="ChatGPT Image 2026年5月10日 02_44_55" src="https://github.com/user-attachments/assets/b2cb72d7-f386-4b84-a9eb-8d9a99705896" />
+
 # whocall + whoimpl
 
 code analysis tools applicable to both human and AI agents.
