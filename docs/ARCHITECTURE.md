@@ -62,7 +62,7 @@ who-ast/
 │   │       ├── symbol.rs               # Symbol, Import, FileEntry, SourceRange
 │   │       ├── refs.rs                 # Reference, RefKind
 │   │       ├── calls.rs                # CallEdge, Resolution
-│   │       ├── confidence.rs           # scoring builder + labels
+│   │       ├── confidence.rs           # internal scoring builder + labels
 │   │       ├── resolve.rs              # target → symbol resolution, caller lookup
 │   │       ├── index.rs                # SQLite schema, reads, writes
 │   │       ├── lang.rs                 # LanguageParser trait, detect_language()
@@ -252,6 +252,6 @@ cargo install --path crates/who-cli
 
 1. **Semantic-first** — resolve to meaning, not syntax shape
 2. **Incremental by default** — hash-based re-indexing avoids reparsing unchanged files
-3. **AI-agent native** — structured JSON output with confidence scoring
+3. **AI-agent native** — structured JSON output for easy integration
 4. **Multi-language architecture** — pluggable `LanguageParser` trait per language
 5. **Unix-like UX** — minimal, composable, scriptable CLI commands
