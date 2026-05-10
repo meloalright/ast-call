@@ -1,4 +1,4 @@
-name: Integration Test
+name: Installation Test
 
 on:
   workflow_dispatch:
