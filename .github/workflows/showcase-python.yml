@@ -35,14 +35,14 @@ jobs:
       - name: "Demo: whocall (human)"
         run: |
           cd samples/python-project
-          echo "$ whocall src/utils.py:1"
-          ../../target/release/whocall src/utils.py:1 || true
+          echo "$ whocall src/utils.py:6"
+          ../../target/release/whocall src/utils.py:6 || true
 
       - name: "Demo: whocall (JSON)"
         run: |
           cd samples/python-project
-          echo "$ whocall src/utils.py:1 --json"
-          ../../target/release/whocall src/utils.py:1 --json || true
+          echo "$ whocall src/utils.py:6 --json"
+          ../../target/release/whocall src/utils.py:6 --json || true
 
       - name: "Demo: whocall file#symbol"
         run: |
