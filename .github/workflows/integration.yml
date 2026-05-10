@@ -21,66 +21,24 @@ jobs:
       - name: "whoimpl -h"
         run: whoimpl -h
 
-      - name: "whocall: index Rust sample"
+      - name: "index + query Rust sample"
         run: |
           cd samples/rust-project
           whocall index .
-          cat .who-ast/metadata.json
-
-      - name: "whocall: file:line (Rust)"
-        run: |
-          cd samples/rust-project
           whocall src/text/render.rs:3
-
-      - name: "whocall: file#symbol (Rust)"
-        run: |
-          cd samples/rust-project
           whocall src/text/render.rs#render_text
-
-      - name: "whocall: JSON output (Rust)"
-        run: |
-          cd samples/rust-project
           whocall src/text/render.rs:3 --json
-
-      - name: "whoimpl: file:line (Rust)"
-        run: |
-          cd samples/rust-project
           whoimpl src/base_trait.rs:4
-
-      - name: "whoimpl: file#symbol (Rust)"
-        run: |
-          cd samples/rust-project
           whoimpl src/base_trait.rs#render
-
-      - name: "whoimpl: JSON output (Rust)"
-        run: |
-          cd samples/rust-project
           whoimpl src/base_trait.rs:4 --json
 
-      - name: "whocall: index Python sample"
+      - name: "index + query Python sample"
         run: |
           cd samples/python-project
           whocall index .
-          cat .who-ast/metadata.json
-
-      - name: "whocall: file:line (Python)"
-        run: |
-          cd samples/python-project
           whocall src/utils.py:1
-
-      - name: "whocall: file#symbol (Python)"
-        run: |
-          cd samples/python-project
           whocall src/utils.py#format_output
-
-      - name: "whoimpl: file:line (Python)"
-        run: |
-          cd samples/python-project
           whoimpl src/models.py:5
-
-      - name: "whoimpl: file#symbol (Python)"
-        run: |
-          cd samples/python-project
           whoimpl src/base.py#speak
 
   test-brew-linux:
@@ -110,17 +68,19 @@ jobs:
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
           whoimpl -h
 
-      - name: "whocall: index + query Rust sample"
+      - name: "index + query Rust sample"
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
           cd samples/rust-project
           whocall index .
           whocall src/text/render.rs:3
           whocall src/text/render.rs#render_text
+          whocall src/text/render.rs:3 --json
           whoimpl src/base_trait.rs:4
           whoimpl src/base_trait.rs#render
+          whoimpl src/base_trait.rs:4 --json
 
-      - name: "whocall: index + query Python sample"
+      - name: "index + query Python sample"
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
           cd samples/python-project
@@ -151,7 +111,7 @@ jobs:
       - name: "whoimpl -h"
         run: whoimpl -h
 
-      - name: "whocall: index + query Rust sample"
+      - name: "index + query Rust sample"
         run: |
           cd samples/rust-project
           whocall index .
@@ -162,7 +122,7 @@ jobs:
           whoimpl src/base_trait.rs#render
           whoimpl src/base_trait.rs:4 --json
 
-      - name: "whocall: index + query Python sample"
+      - name: "index + query Python sample"
         run: |
           cd samples/python-project
           whocall index .
@@ -192,7 +152,7 @@ jobs:
       - name: "whoimpl -h"
         run: whoimpl -h
 
-      - name: "whocall: index + query Rust sample"
+      - name: "index + query Rust sample"
         run: |
           cd samples/rust-project
           whocall index .
@@ -203,7 +163,7 @@ jobs:
           whoimpl src/base_trait.rs#render
           whoimpl src/base_trait.rs:4 --json
 
-      - name: "whocall: index + query Python sample"
+      - name: "index + query Python sample"
         run: |
           cd samples/python-project
           whocall index .
