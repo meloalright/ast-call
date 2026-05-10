@@ -549,7 +549,7 @@ dependencies = [
 
 [[package]]
 name = "who-cli"
-version = "0.0.19"
+version = "0.0.20"
 dependencies = [
  "anyhow",
  "clap",
@@ -563,7 +563,7 @@ dependencies = [
 
 [[package]]
 name = "who-core"
-version = "0.0.19"
+version = "0.0.20"
 dependencies = [
  "anyhow",
  "ignore",
@@ -575,7 +575,7 @@ dependencies = [
 
 [[package]]
 name = "who-lang-python"
-version = "0.0.19"
+version = "0.0.20"
 dependencies = [
  "anyhow",
  "tree-sitter",
@@ -585,7 +585,7 @@ dependencies = [
 
 [[package]]
 name = "who-lang-rust"
-version = "0.0.19"
+version = "0.0.20"
 dependencies = [
  "anyhow",
  "tree-sitter",
