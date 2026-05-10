@@ -73,6 +73,8 @@ pub fn run(target_str: &str, opts: &OutputOpts) -> Result<()> {
                     s.qualified_name
                 );
             }
+            println!();
+            println!("{} implementations found.", impls.len());
         }
     }
 
