@@ -99,9 +99,6 @@ who-ast/
 │       ├── package.json
 │       └── install.js                 # postinstall binary downloader
 │
-├── install-whocall.sh                  # Shell install script
-├── install-whoimpl.sh                  # Shell install script
-│
 └── .github/workflows/
     ├── ci.yml                          # build, test, clippy, fmt
     ├── showcase-rust.yml               # Rust sample demos + edge cases
@@ -232,10 +229,6 @@ Each npm package is a thin wrapper — no native code bundled. On `npm install`,
 # npm (recommended)
 npm install -g @whocall/cli
 npm install -g @whoimpl/cli
-
-# Shell (macOS / Linux)
-curl -fsSL https://raw.githubusercontent.com/meloalright/who-ast/master/install-whocall.sh | sh
-curl -fsSL https://raw.githubusercontent.com/meloalright/who-ast/master/install-whoimpl.sh | sh
 
 # Homebrew (macOS / Linux)
 brew tap meloalright/tap
