@@ -67,3 +67,25 @@ jobs:
           cd samples/go-project
           echo "$ whoimpl pkg/animal.go:4 --json"
           ../../target/release/whoimpl pkg/animal.go:4 --json || true
+
+      - name: "Edge case: comments should not appear as callers"
+        run: |
+          cd samples/go-project
+          OUTPUT=$(../../target/release/whocall pkg/utils.go:5 --json || true)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "commentedOutCall"; then
+            echo "::error::FAIL: commentedOutCall appeared as a caller"
+            exit 1
+          fi
+          echo "PASS: commentedOutCall correctly excluded"
+
+      - name: "Edge case: same-name fn should not appear as caller"
+        run: |
+          cd samples/go-project
+          OUTPUT=$(../../target/release/whocall pkg/utils.go:5 --json || true)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "callsLocalFormatOutput"; then
+            echo "::error::FAIL: callsLocalFormatOutput appeared as a caller"
+            exit 1
+          fi
+          echo "PASS: callsLocalFormatOutput correctly excluded"
