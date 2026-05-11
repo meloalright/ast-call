@@ -97,13 +97,7 @@ impl GoParser {
         })
     }
 
-    fn extract_method(
-        &self,
-        node: Node,
-        source: &[u8],
-        file_id: i64,
-        pkg: &str,
-    ) -> Option<Symbol> {
+    fn extract_method(&self, node: Node, source: &[u8], file_id: i64, pkg: &str) -> Option<Symbol> {
         let name_node = node.child_by_field_name("name")?;
         let name = node_text(name_node, source).to_string();
 
@@ -525,7 +519,8 @@ mod tests {
 
     #[test]
     fn parse_calls() {
-        let source = b"package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"hello\")\n}\n";
+        let source =
+            b"package main\n\nimport \"fmt\"\n\nfunc main() {\n\tfmt.Println(\"hello\")\n}\n";
         let tree = GoParser::parse_source(source).unwrap();
         let root = tree.root_node();
         let parser = GoParser::new();
@@ -549,10 +544,15 @@ mod tests {
         let pkg = extract_package_name(root, source);
         let mut symbols = Vec::new();
         parser.extract_symbols(root, source, 1, &pkg, &mut symbols);
-        let decl = symbols.iter().find(|s| s.kind == SymbolKind::TraitMethodDecl);
+        let decl = symbols
+            .iter()
+            .find(|s| s.kind == SymbolKind::TraitMethodDecl);
         assert!(decl.is_some());
         assert_eq!(decl.unwrap().qualified_name, "pkg.Speaker.Speak");
-        let methods: Vec<_> = symbols.iter().filter(|s| s.kind == SymbolKind::Method).collect();
+        let methods: Vec<_> = symbols
+            .iter()
+            .filter(|s| s.kind == SymbolKind::Method)
+            .collect();
         assert_eq!(methods.len(), 2);
     }
 }
