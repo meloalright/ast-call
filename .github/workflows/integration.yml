@@ -11,27 +11,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install via Homebrew
-        run: |
-          brew install meloalright/tap/whocall
-          brew install meloalright/tap/whoimpl
+        run: brew install meloalright/tap/whocall
 
       - name: "whocall -V"
         run: whocall -V
-
-      - name: "whoimpl -V"
-        run: whoimpl -V
-
-      - name: "whocall -V"
-        run: whocall -V
-
-      - name: "whoimpl -V"
-        run: whoimpl -V
 
       - name: "whocall -h"
         run: whocall -h
-
-      - name: "whoimpl -h"
-        run: whoimpl -h
 
       - name: "index + query Rust sample"
         run: |
@@ -40,9 +26,6 @@ jobs:
           whocall src/text/render.rs:3
           whocall src/text/render.rs#render_text
           whocall src/text/render.rs:3 --json
-          whoimpl src/base_trait.rs:4
-          whoimpl src/base_trait.rs#render
-          whoimpl src/base_trait.rs:4 --json
 
       - name: "index + query Python sample"
         run: |
@@ -50,8 +33,6 @@ jobs:
           whocall index .
           whocall src/utils.py:6
           whocall src/utils.py#format_output
-          whoimpl src/models.py:5
-          whoimpl src/base.py#speak
 
       - name: "index + query Go sample"
         run: |
@@ -59,7 +40,6 @@ jobs:
           whocall index .
           whocall pkg/utils.go:5
           whocall pkg/utils.go#FormatOutput
-          whoimpl pkg/animal.go:4
 
   test-brew-linux:
     name: "Homebrew (Linux)"
@@ -76,27 +56,16 @@ jobs:
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
           brew install meloalright/tap/whocall
-          brew install meloalright/tap/whoimpl
 
       - name: "whocall -V"
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
           whocall -V
 
-      - name: "whoimpl -V"
-        run: |
-          export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-          whoimpl -V
-
       - name: "whocall -h"
         run: |
           export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
           whocall -h
-
-      - name: "whoimpl -h"
-        run: |
-          export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-          whoimpl -h
 
       - name: "index + query Rust sample"
         run: |
@@ -106,9 +75,6 @@ jobs:
           whocall src/text/render.rs:3
           whocall src/text/render.rs#render_text
           whocall src/text/render.rs:3 --json
-          whoimpl src/base_trait.rs:4
-          whoimpl src/base_trait.rs#render
-          whoimpl src/base_trait.rs:4 --json
 
       - name: "index + query Python sample"
         run: |
@@ -117,8 +83,6 @@ jobs:
           whocall index .
           whocall src/utils.py:6
           whocall src/utils.py#format_output
-          whoimpl src/models.py:5
-          whoimpl src/base.py#speak
 
       - name: "index + query Go sample"
         run: |
@@ -127,7 +91,6 @@ jobs:
           whocall index .
           whocall pkg/utils.go:5
           whocall pkg/utils.go#FormatOutput
-          whoimpl pkg/animal.go:4
 
   test-npm-macos:
     name: "npm (macOS)"
@@ -140,27 +103,13 @@ jobs:
           node-version: 20
 
       - name: Install via npm
-        run: |
-          npm install -g @whocall/cli
-          npm install -g @whoimpl/cli
+        run: npm install -g @whocall/cli
 
       - name: "whocall -V"
         run: whocall -V
-
-      - name: "whoimpl -V"
-        run: whoimpl -V
-
-      - name: "whocall -V"
-        run: whocall -V
-
-      - name: "whoimpl -V"
-        run: whoimpl -V
 
       - name: "whocall -h"
         run: whocall -h
-
-      - name: "whoimpl -h"
-        run: whoimpl -h
 
       - name: "index + query Rust sample"
         run: |
@@ -169,9 +118,6 @@ jobs:
           whocall src/text/render.rs:3
           whocall src/text/render.rs#render_text
           whocall src/text/render.rs:3 --json
-          whoimpl src/base_trait.rs:4
-          whoimpl src/base_trait.rs#render
-          whoimpl src/base_trait.rs:4 --json
 
       - name: "index + query Python sample"
         run: |
@@ -179,8 +125,6 @@ jobs:
           whocall index .
           whocall src/utils.py:6
           whocall src/utils.py#format_output
-          whoimpl src/models.py:5
-          whoimpl src/base.py#speak
 
       - name: "index + query Go sample"
         run: |
@@ -188,7 +132,6 @@ jobs:
           whocall index .
           whocall pkg/utils.go:5
           whocall pkg/utils.go#FormatOutput
-          whoimpl pkg/animal.go:4
 
   test-npm-linux:
     name: "npm (Linux)"
@@ -201,21 +144,13 @@ jobs:
           node-version: 20
 
       - name: Install via npm
-        run: |
-          npm install -g @whocall/cli
-          npm install -g @whoimpl/cli
+        run: npm install -g @whocall/cli
 
       - name: "whocall -V"
         run: whocall -V
 
-      - name: "whoimpl -V"
-        run: whoimpl -V
-
       - name: "whocall -h"
         run: whocall -h
-
-      - name: "whoimpl -h"
-        run: whoimpl -h
 
       - name: "index + query Rust sample"
         run: |
@@ -224,9 +159,6 @@ jobs:
           whocall src/text/render.rs:3
           whocall src/text/render.rs#render_text
           whocall src/text/render.rs:3 --json
-          whoimpl src/base_trait.rs:4
-          whoimpl src/base_trait.rs#render
-          whoimpl src/base_trait.rs:4 --json
 
       - name: "index + query Python sample"
         run: |
@@ -234,8 +166,6 @@ jobs:
           whocall index .
           whocall src/utils.py:6
           whocall src/utils.py#format_output
-          whoimpl src/models.py:5
-          whoimpl src/base.py#speak
 
       - name: "index + query Go sample"
         run: |
@@ -243,4 +173,3 @@ jobs:
           whocall index .
           whocall pkg/utils.go:5
           whocall pkg/utils.go#FormatOutput
-          whoimpl pkg/animal.go:4

@@ -50,7 +50,7 @@ jobs:
         shell: bash
         run: |
           cd target/${{ matrix.target }}/release
-          tar czf ../../../who-${{ matrix.target }}.tar.gz whocall whoimpl
+          tar czf ../../../who-${{ matrix.target }}.tar.gz whocall
           cd ../../..
 
       - name: Upload to release
@@ -86,7 +86,7 @@ jobs:
 
       - name: Generate formulas
         run: |
-          for entry in "whocall:Whocall:whocall:Semantic code intelligence — find callers of a symbol" "whoimpl:Whoimpl:whoimpl:Semantic code intelligence — find implementations of traits and interfaces"; do
+          for entry in "whocall:Whocall:whocall:Semantic code intelligence — find callers of a symbol"; do
             IFS=':' read -r FORMULA_NAME CLASS_NAME BIN_NAME DESC <<< "$entry"
             cat > "${FORMULA_NAME}.rb" << FORMULA
           class ${CLASS_NAME} < Formula
@@ -135,13 +135,12 @@ jobs:
           git clone https://x-access-token:${TAP_TOKEN}@github.com/meloalright/homebrew-tap.git tap
           mkdir -p tap/Formula
           cp whocall.rb tap/Formula/whocall.rb
-          cp whoimpl.rb tap/Formula/whoimpl.rb
           cd tap
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/whocall.rb Formula/whoimpl.rb
+          git add Formula/whocall.rb
           git diff --cached --quiet && echo "No changes" && exit 0
-          git commit -m "Update whocall and whoimpl to $VERSION_NUM"
+          git commit -m "Update whocall to $VERSION_NUM"
           git push
 
   npm:
@@ -176,7 +175,7 @@ jobs:
           VERSION="${{ github.event.release.tag_name }}"
           VERSION_NUM="${VERSION#v}"
 
-          for pkg in whocall-cli whoimpl-cli; do
+          for pkg in whocall-cli; do
             cd npm/$pkg
             node -e "
               const pkg = require('./package.json');
@@ -193,8 +192,3 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
 
-      - name: Publish @whoimpl/cli
-        working-directory: npm/whoimpl-cli
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public

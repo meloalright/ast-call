@@ -50,24 +50,6 @@ jobs:
           echo "$ whocall src/text/render.rs#render_text"
           ../../target/release/whocall src/text/render.rs#render_text || true
 
-      - name: "Demo: whoimpl (human)"
-        run: |
-          cd samples/rust-project
-          echo "$ whoimpl src/base_trait.rs:4"
-          ../../target/release/whoimpl src/base_trait.rs:4 || true
-
-      - name: "Demo: whoimpl (JSON)"
-        run: |
-          cd samples/rust-project
-          echo "$ whoimpl src/base_trait.rs:4 --json"
-          ../../target/release/whoimpl src/base_trait.rs:4 --json || true
-
-      - name: "Demo: whoimpl file#symbol"
-        run: |
-          cd samples/rust-project
-          echo "$ whoimpl src/base_trait.rs#render"
-          ../../target/release/whoimpl src/base_trait.rs#render || true
-
       - name: "Edge case: comments should not appear as callers"
         run: |
           cd samples/rust-project

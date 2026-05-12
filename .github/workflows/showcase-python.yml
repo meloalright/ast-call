@@ -50,24 +50,6 @@ jobs:
           echo "$ whocall src/utils.py#format_output"
           ../../target/release/whocall src/utils.py#format_output || true
 
-      - name: "Demo: whoimpl (human)"
-        run: |
-          cd samples/python-project
-          echo "$ whoimpl src/models.py:5"
-          ../../target/release/whoimpl src/models.py:5 || true
-
-      - name: "Demo: whoimpl (JSON)"
-        run: |
-          cd samples/python-project
-          echo "$ whoimpl src/models.py:5 --json"
-          ../../target/release/whoimpl src/models.py:5 --json || true
-
-      - name: "Demo: whoimpl file#symbol"
-        run: |
-          cd samples/python-project
-          echo "$ whoimpl src/base.py#speak"
-          ../../target/release/whoimpl src/base.py#speak || true
-
       - name: "Edge case: comments should not appear as callers"
         run: |
           cd samples/python-project

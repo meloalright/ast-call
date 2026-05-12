@@ -9,10 +9,6 @@ description = "Semantic code intelligence for humans and AI agents"
 name = "whocall"
 path = "src/bin_whocall.rs"
 
-[[bin]]
-name = "whoimpl"
-path = "src/bin_whoimpl.rs"
-
 [dependencies]
 who-core = { workspace = true }
 who-lang-rust = { workspace = true }

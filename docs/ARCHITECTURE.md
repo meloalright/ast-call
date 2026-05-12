@@ -1,8 +1,8 @@
-# who-ast — Architecture
+# whocall — Architecture
 
 ## Overview
 
-`who-ast` is a semantic code intelligence runtime for humans and AI agents. It parses source code via tree-sitter, builds a symbol/call index in SQLite, and answers semantic questions like "who calls this function?" and "who implements this trait?"
+`whocall` is a semantic code intelligence tool for humans and AI agents. It parses source code via tree-sitter, builds a symbol/call index in SQLite, and answers the question "who calls this function?"
 
 ```
 Source Files
@@ -20,11 +20,10 @@ Source Files
 
 ---
 
-## Core Binaries
+## CLI
 
 ```
 whocall     Find callers of a symbol — and build the index
-whoimpl     Find implementations of traits/interfaces — and build the index
 ```
 
 ### Target Formats
@@ -43,9 +42,6 @@ whocall index .                          # build the index
 whocall src/render.rs:3                  # who calls the function at this line?
 whocall src/render.rs:3 --json           # structured output for AI agents
 whocall src/render.rs#render_text        # who calls render_text in this file?
-whoimpl src/base_trait.rs:4              # who implements the trait at this line?
-whoimpl src/base_trait.rs#render         # who implements render?
-whoimpl index .                          # build the index
 ```
 
 ---
@@ -68,13 +64,11 @@ who-ast/
 │   │       ├── lang.rs                 # LanguageParser trait, detect_language()
 │   │       └── error.rs               # WhoError, ExitCode
 │   │
-│   ├── who-cli/                        # binary crate (whocall, whoimpl)
+│   ├── who-cli/                        # binary crate (whocall)
 │   │   └── src/
 │   │       ├── bin_whocall.rs          # `whocall` — caller queries + index
-│   │       ├── bin_whoimpl.rs          # `whoimpl` — impl queries + index
 │   │       ├── cmd_index.rs            # index subcommand
 │   │       ├── cmd_callers.rs          # caller resolution
-│   │       ├── cmd_impl.rs             # impl resolution
 │   │       └── output.rs              # human + JSON formatters
 │   │
 │   ├── who-lang-rust/                  # Rust language support
@@ -98,10 +92,7 @@ who-ast/
 │   └── go-project/                     # Go sample codebase for demos
 │
 ├── npm/
-│   ├── whocall-cli/                    # @whocall/cli npm package
-│   │   ├── package.json
-│   │   └── install.js                 # postinstall binary downloader
-│   └── whoimpl-cli/                    # @whoimpl/cli npm package
+│   └── whocall-cli/                    # @whocall/cli npm package
 │       ├── package.json
 │       └── install.js                 # postinstall binary downloader
 │
@@ -111,7 +102,7 @@ who-ast/
     ├── showcase-python.yml             # Python sample demos + edge cases
     ├── showcase-go.yml                 # Go sample demos + edge cases
     ├── release.yml                     # build binaries + update Homebrew tap
-    └── npm.yml                         # publish @whocall/cli + @whoimpl/cli to npm
+    └── npm.yml                         # publish @whocall/cli to npm
 ```
 
 ### Crate Dependency Graph
@@ -209,11 +200,11 @@ Triggered on GitHub release publish:
      │   ├─ x86_64-unknown-linux-gnu (Linux x86_64, native)
      │   └─ aarch64-unknown-linux-gnu (Linux ARM, cross)
      │
-     ├─ Package whocall + whoimpl as who-<target>.tar.gz
+     ├─ Package whocall as who-<target>.tar.gz
      │
      ├─ Upload to GitHub release assets
      │
-     └─ Homebrew job: generate whocall.rb + whoimpl.rb → push to meloalright/homebrew-tap
+     └─ Homebrew job: generate whocall.rb → push to meloalright/homebrew-tap
 ```
 
 ### npm Publish Pipeline (`.github/workflows/npm.yml`)
@@ -225,26 +216,22 @@ Triggered on the same release event, after release assets are available:
      │
      ├─ Wait for release assets (≥4 binaries uploaded)
      │
-     ├─ Update package.json versions to match release tag
+     ├─ Update package.json version to match release tag
      │
-     ├─ Publish @whocall/cli
-     │
-     └─ Publish @whoimpl/cli
+     └─ Publish @whocall/cli
 ```
 
-Each npm package is a thin wrapper — no native code bundled. On `npm install`, a `postinstall` script downloads the correct prebuilt binary from GitHub releases.
+The npm package is a thin wrapper — no native code bundled. On `npm install`, a `postinstall` script downloads the correct prebuilt binary from GitHub releases.
 
 ### Installation
 
 ```sh
 # npm (recommended)
 npm install -g @whocall/cli
-npm install -g @whoimpl/cli
 
 # Homebrew (macOS / Linux)
 brew tap meloalright/tap
 brew install whocall
-brew install whoimpl
 
 # From source
 cargo install --path crates/who-cli
