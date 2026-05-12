@@ -23,7 +23,7 @@ pub fn run(opts: IndexOpts) -> Result<()> {
     let root = Path::new(&opts.path)
         .canonicalize()
         .context("invalid path")?;
-    let index_dir = root.join(".who-ast");
+    let index_dir = root.join(".whocall");
     let index_path = index_dir.join("index.sqlite");
 
     let index = if opts.clean && index_path.exists() {

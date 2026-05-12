@@ -75,7 +75,7 @@ jobs:
 
           for target in aarch64-apple-darwin x86_64-apple-darwin x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu; do
             gh release download "$VERSION" \
-              --repo meloalright/who-ast \
+              --repo meloalright/whocall \
               --pattern "who-${target}.tar.gz"
             SHA=$(sha256sum "who-${target}.tar.gz" | cut -d' ' -f1)
             echo "SHA_${target//-/_}=$SHA" >> "$GITHUB_ENV"
@@ -91,26 +91,26 @@ jobs:
             cat > "${FORMULA_NAME}.rb" << FORMULA
           class ${CLASS_NAME} < Formula
             desc "${DESC}"
-            homepage "https://github.com/meloalright/who-ast"
+            homepage "https://github.com/meloalright/whocall"
             version "${VERSION_NUM}"
             license "MIT"
 
             on_macos do
               if Hardware::CPU.arm?
-                url "https://github.com/meloalright/who-ast/releases/download/${VERSION_TAG}/who-aarch64-apple-darwin.tar.gz"
+                url "https://github.com/meloalright/whocall/releases/download/${VERSION_TAG}/who-aarch64-apple-darwin.tar.gz"
                 sha256 "${SHA_aarch64_apple_darwin}"
               else
-                url "https://github.com/meloalright/who-ast/releases/download/${VERSION_TAG}/who-x86_64-apple-darwin.tar.gz"
+                url "https://github.com/meloalright/whocall/releases/download/${VERSION_TAG}/who-x86_64-apple-darwin.tar.gz"
                 sha256 "${SHA_x86_64_apple_darwin}"
               end
             end
 
             on_linux do
               if Hardware::CPU.arm?
-                url "https://github.com/meloalright/who-ast/releases/download/${VERSION_TAG}/who-aarch64-unknown-linux-gnu.tar.gz"
+                url "https://github.com/meloalright/whocall/releases/download/${VERSION_TAG}/who-aarch64-unknown-linux-gnu.tar.gz"
                 sha256 "${SHA_aarch64_unknown_linux_gnu}"
               else
-                url "https://github.com/meloalright/who-ast/releases/download/${VERSION_TAG}/who-x86_64-unknown-linux-gnu.tar.gz"
+                url "https://github.com/meloalright/whocall/releases/download/${VERSION_TAG}/who-x86_64-unknown-linux-gnu.tar.gz"
                 sha256 "${SHA_x86_64_unknown_linux_gnu}"
               end
             end

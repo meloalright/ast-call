@@ -2,10 +2,10 @@
   "name": "@whocall/cli",
   "version": "0.0.8",
   "description": "Semantic code intelligence — find callers of a symbol",
-  "homepage": "https://github.com/meloalright/who-ast",
+  "homepage": "https://github.com/meloalright/whocall",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meloalright/who-ast.git"
+    "url": "git+https://github.com/meloalright/whocall.git"
   },
   "license": "MIT",
   "bin": {

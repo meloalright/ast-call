@@ -1,0 +1,108 @@
+name: Showcase
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  showcase:
+    name: "${{ matrix.lang }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - lang: Rust
+            sample_dir: samples/rust-project
+            target_line: "src/text/render.rs:3"
+            target_symbol: "src/text/render.rs#render_text"
+            edge_line: "src/text/render.rs:3"
+            edge_comment_bad: commented_out_call
+            edge_samename_bad: calls_local_render_text
+            extra_demo: ""
+          - lang: Python
+            sample_dir: samples/python-project
+            target_line: "src/utils.py:6"
+            target_symbol: "src/utils.py#format_output"
+            edge_line: "src/utils.py:1"
+            edge_comment_bad: commented_out_call
+            edge_samename_bad: calls_local_render_text
+            extra_demo: ""
+          - lang: Go
+            sample_dir: samples/go-project
+            target_line: "pkg/utils.go:5"
+            target_symbol: "pkg/utils.go#FormatOutput"
+            edge_line: "pkg/utils.go:5"
+            edge_comment_bad: commentedOutCall
+            edge_samename_bad: callsLocalFormatOutput
+            extra_demo: "pkg/utils.go#RenderText"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build
+        run: cargo build --release
+
+      - name: Index sample project
+        run: |
+          cd ${{ matrix.sample_dir }}
+          ../../target/release/whocall index .
+          echo ""
+          echo "=== metadata ==="
+          cat .whocall/metadata.json
+
+      - name: "Demo: whocall (human)"
+        run: |
+          cd ${{ matrix.sample_dir }}
+          echo "$ whocall ${{ matrix.target_line }}"
+          ../../target/release/whocall ${{ matrix.target_line }} || true
+
+      - name: "Demo: whocall (JSON)"
+        run: |
+          cd ${{ matrix.sample_dir }}
+          echo "$ whocall ${{ matrix.target_line }} --json"
+          ../../target/release/whocall ${{ matrix.target_line }} --json || true
+
+      - name: "Demo: whocall file#symbol"
+        run: |
+          cd ${{ matrix.sample_dir }}
+          echo "$ whocall ${{ matrix.target_symbol }}"
+          ../../target/release/whocall ${{ matrix.target_symbol }} || true
+
+      - name: "Demo: whocall cross-file"
+        if: matrix.extra_demo != ''
+        run: |
+          cd ${{ matrix.sample_dir }}
+          echo "$ whocall ${{ matrix.extra_demo }}"
+          ../../target/release/whocall ${{ matrix.extra_demo }} || true
+
+      - name: "Edge case: comments should not appear as callers"
+        run: |
+          cd ${{ matrix.sample_dir }}
+          OUTPUT=$(../../target/release/whocall ${{ matrix.edge_line }} --json || true)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "${{ matrix.edge_comment_bad }}"; then
+            echo "::error::FAIL: ${{ matrix.edge_comment_bad }} appeared as a caller"
+            exit 1
+          fi
+          echo "PASS: ${{ matrix.edge_comment_bad }} correctly excluded"
+
+      - name: "Edge case: same-name fn should not appear as caller"
+        run: |
+          cd ${{ matrix.sample_dir }}
+          OUTPUT=$(../../target/release/whocall ${{ matrix.edge_line }} --json || true)
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "${{ matrix.edge_samename_bad }}"; then
+            echo "::error::FAIL: ${{ matrix.edge_samename_bad }} appeared as a caller"
+            exit 1
+          fi
+          echo "PASS: ${{ matrix.edge_samename_bad }} correctly excluded"

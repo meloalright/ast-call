@@ -157,6 +157,40 @@ fn resolve_file_calls(index: &Index, file_id: i64) -> Result<usize> {
             }
         }
 
+        // Strategy 1b: package-qualified call (Go's pkg.Func() pattern)
+        // e.g. "utils.Process()" → prefix "utils", find import with local_name "utils",
+        // then look up symbol with qualified_name "utils.Process"
+        if let Some(prefix) = extract_call_prefix(&r.text) {
+            if let Some(imp) = imports.iter().find(|i| i.local_name == prefix) {
+                let pkg_name = imp
+                    .qualified_target
+                    .rsplit('/')
+                    .next()
+                    .unwrap_or(&imp.qualified_target);
+                let qname = format!("{pkg_name}.{callee_name}");
+                let candidates = index.find_symbols_by_qualified_name(&qname)?;
+                if candidates.len() == 1 {
+                    let target = &candidates[0];
+                    let confidence = 0.80;
+                    index.update_ref_target(r.id, target.id, confidence)?;
+                    if let Some(caller_id) = r.source_symbol_id {
+                        index.insert_call(&CallEdge {
+                            id: 0,
+                            caller_symbol_id: caller_id,
+                            callee_symbol_id: Some(target.id),
+                            callee_name: Some(callee_name.to_string()),
+                            candidate_symbol_ids: vec![],
+                            ref_id: r.id,
+                            confidence,
+                            resolution: Resolution::Resolved,
+                        })?;
+                    }
+                    resolved += 1;
+                    continue;
+                }
+            }
+        }
+
         // Strategy 2: match symbol in same file
         if let Some(sym) = local_symbols.iter().find(|s| s.name == callee_name) {
             let confidence = 0.60;
@@ -237,6 +271,32 @@ fn extract_callee_name(call_text: &str) -> &str {
     before_paren
 }
 
+/// Extract the package/receiver prefix from a call expression.
+/// e.g. "pkg.FormatOutput()" → Some("pkg")
+///      "fmt.Println()"      → Some("fmt")
+///      "obj.field.Method()"  → None (multi-dot = receiver chain, not package)
+///      "render_text()"       → None
+///      "Foo::new()"          → None
+fn extract_call_prefix(call_text: &str) -> Option<&str> {
+    let before_paren = match call_text.find('(') {
+        Some(pos) => call_text[..pos].trim(),
+        None => return None,
+    };
+    // Only single-dot patterns like `pkg.Func` — skip `a.b.c` chains
+    let dot_pos = before_paren.find('.')?;
+    if before_paren[dot_pos + 1..].contains('.') {
+        return None;
+    }
+    if before_paren.contains("::") {
+        return None;
+    }
+    let prefix = &before_paren[..dot_pos];
+    if prefix.is_empty() {
+        return None;
+    }
+    Some(prefix)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -259,5 +319,26 @@ mod tests {
     #[test]
     fn test_extract_callee_nested() {
         assert_eq!(extract_callee_name("self.inner.flush()"), "flush");
+    }
+
+    #[test]
+    fn test_extract_prefix_package_call() {
+        assert_eq!(extract_call_prefix("pkg.FormatOutput()"), Some("pkg"));
+        assert_eq!(extract_call_prefix("fmt.Println(\"hi\")"), Some("fmt"));
+    }
+
+    #[test]
+    fn test_extract_prefix_no_dot() {
+        assert_eq!(extract_call_prefix("render_text()"), None);
+    }
+
+    #[test]
+    fn test_extract_prefix_multi_dot() {
+        assert_eq!(extract_call_prefix("obj.field.Method()"), None);
+    }
+
+    #[test]
+    fn test_extract_prefix_rust_path() {
+        assert_eq!(extract_call_prefix("Foo::new()"), None);
     }
 }

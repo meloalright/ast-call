@@ -4,7 +4,7 @@ const path = require("path");
 const os = require("os");
 
 const BIN_NAME = "whocall";
-const REPO = "meloalright/who-ast";
+const REPO = "meloalright/whocall";
 
 function getTarget() {
   const platform = os.platform();

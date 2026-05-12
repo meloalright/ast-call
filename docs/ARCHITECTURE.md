@@ -11,7 +11,7 @@ Source Files
      |
   Symbol + Import + Call Extraction
      |
-  SQLite Index  (.who-ast/index.sqlite)
+  SQLite Index  (.whocall/index.sqlite)
      |
   Target Resolution + Query
      |
@@ -49,7 +49,7 @@ whocall src/render.rs#render_text        # who calls render_text in this file?
 ## Workspace Layout
 
 ```
-who-ast/
+whocall/
 ├── Cargo.toml                          # workspace root
 ├── crates/
 │   ├── who-core/                       # data model, index, resolution engine
@@ -98,11 +98,9 @@ who-ast/
 │
 └── .github/workflows/
     ├── ci.yml                          # build, test, clippy, fmt
-    ├── showcase-rust.yml               # Rust sample demos + edge cases
-    ├── showcase-python.yml             # Python sample demos + edge cases
-    ├── showcase-go.yml                 # Go sample demos + edge cases
-    ├── release.yml                     # build binaries + update Homebrew tap
-    └── npm.yml                         # publish @whocall/cli to npm
+    ├── integration.yml                 # end-to-end checks (Rust, Python, Go)
+    ├── showcase.yml                    # sample demos + edge cases (Rust, Python, Go matrix)
+    └── release.yml                     # build binaries, Homebrew tap, npm publish
 ```
 
 ### Crate Dependency Graph
@@ -204,21 +202,19 @@ Triggered on GitHub release publish:
      │
      ├─ Upload to GitHub release assets
      │
-     └─ Homebrew job: generate whocall.rb → push to meloalright/homebrew-tap
-```
-
-### npm Publish Pipeline (`.github/workflows/npm.yml`)
-
-Triggered on the same release event, after release assets are available:
-
-```
- release published
+     ├─ Homebrew job: generate whocall.rb → push to meloalright/homebrew-tap
      │
+     └─ npm job: publish @whocall/cli with updated version
+```
+
+### npm Publish (part of `release.yml`)
+
+After binaries are uploaded, the same release workflow:
+
+```
      ├─ Wait for release assets (≥4 binaries uploaded)
-     │
      ├─ Update package.json version to match release tag
-     │
-     └─ Publish @whocall/cli
+     └─ Publish @whocall/cli to npm
 ```
 
 The npm package is a thin wrapper — no native code bundled. On `npm install`, a `postinstall` script downloads the correct prebuilt binary from GitHub releases.
