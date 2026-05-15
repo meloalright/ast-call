@@ -9,6 +9,7 @@ use who_core::resolve::resolve_all_calls;
 use who_lang_go::GoParser;
 use who_lang_python::PythonParser;
 use who_lang_rust::RustParser;
+use who_lang_ts::TypeScriptParser;
 
 pub struct IndexOpts {
     pub path: String,
@@ -37,6 +38,7 @@ pub fn run(opts: IndexOpts) -> Result<()> {
         Box::new(RustParser::new()),
         Box::new(PythonParser::new()),
         Box::new(GoParser::new()),
+        Box::new(TypeScriptParser::new()),
     ];
 
     let mut walker = ignore::WalkBuilder::new(&root);

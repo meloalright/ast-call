@@ -1,0 +1,12 @@
+[package]
+name = "who-lang-ts"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "TypeScript language support for who"
+
+[dependencies]
+who-core = { workspace = true }
+tree-sitter = { workspace = true }
+tree-sitter-typescript = "0.23"
+anyhow = { workspace = true }

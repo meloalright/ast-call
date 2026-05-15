@@ -14,6 +14,7 @@ who-core = { workspace = true }
 who-lang-rust = { workspace = true }
 who-lang-python = { workspace = true }
 who-lang-go = { workspace = true }
+who-lang-ts = { workspace = true }
 clap = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

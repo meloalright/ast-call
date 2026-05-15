@@ -524,6 +524,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tree-sitter-typescript"
+version = "0.23.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6c5f76ed8d947a75cc446d5fccd8b602ebf0cde64ccf2ffa434d873d7a575eff"
+dependencies = [
+ "cc",
+ "tree-sitter-language",
+]
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -570,6 +580,7 @@ dependencies = [
  "who-lang-go",
  "who-lang-python",
  "who-lang-rust",
+ "who-lang-ts",
 ]
 
 [[package]]
@@ -611,6 +622,16 @@ dependencies = [
  "anyhow",
  "tree-sitter",
  "tree-sitter-rust",
+ "who-core",
+]
+
+[[package]]
+name = "who-lang-ts"
+version = "0.0.23"
+dependencies = [
+ "anyhow",
+ "tree-sitter",
+ "tree-sitter-typescript",
  "who-core",
 ]
 
