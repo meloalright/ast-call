@@ -56,6 +56,14 @@ jobs:
             edge_comment_bad: commentedOutCall
             edge_samename_bad: callsLocalCapitalize
             extra_demo: "src/utils.js#formatName"
+          - lang: Java
+            sample_dir: samples/java-project
+            target_line: "src/main/java/com/example/utils/StringUtils.java:4"
+            target_symbol: "src/main/java/com/example/utils/StringUtils.java#capitalize"
+            edge_line: "src/main/java/com/example/utils/StringUtils.java:4"
+            edge_comment_bad: commentedOutCall
+            edge_samename_bad: callsLocalCapitalize
+            extra_demo: "src/main/java/com/example/App.java#run"
 
     steps:
       - uses: actions/checkout@v4

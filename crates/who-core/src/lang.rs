@@ -34,6 +34,7 @@ pub fn detect_language(path: &Path) -> Option<&'static str> {
         "js" | "jsx" => Some("javascript"),
         "py" => Some("python"),
         "go" => Some("go"),
+        "java" => Some("java"),
         "lua" => Some("lua"),
         _ => None,
     }

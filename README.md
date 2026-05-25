@@ -28,7 +28,7 @@ npm install -g @whocall/cli
 - [x] TypeScript support
 - [x] JavaScript support
 - [x] Go support
-- [ ] Java support
+- [x] Java support
 - [ ] C support
 - [ ] C++ support
 - [ ] Swift support

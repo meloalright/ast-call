@@ -7,6 +7,7 @@ use who_core::index::Index;
 use who_core::lang::{detect_language, LanguageParser};
 use who_core::resolve::resolve_all_calls;
 use who_lang_go::GoParser;
+use who_lang_java::JavaParser;
 use who_lang_js::JavaScriptParser;
 use who_lang_python::PythonParser;
 use who_lang_rust::RustParser;
@@ -41,6 +42,7 @@ pub fn run(opts: IndexOpts) -> Result<()> {
         Box::new(GoParser::new()),
         Box::new(TypeScriptParser::new()),
         Box::new(JavaScriptParser::new()),
+        Box::new(JavaParser::new()),
     ];
 
     let mut walker = ignore::WalkBuilder::new(&root);

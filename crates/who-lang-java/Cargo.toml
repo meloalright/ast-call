@@ -1,0 +1,12 @@
+[package]
+name = "who-lang-java"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Java language support for who"
+
+[dependencies]
+who-core = { workspace = true }
+tree-sitter = { workspace = true }
+tree-sitter-java = "0.23"
+anyhow = { workspace = true }

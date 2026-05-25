@@ -498,6 +498,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tree-sitter-java"
+version = "0.23.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0aa6cbcdc8c679b214e616fd3300da67da0e492e066df01bcf5a5921a71e90d6"
+dependencies = [
+ "cc",
+ "tree-sitter-language",
+]
+
+[[package]]
 name = "tree-sitter-javascript"
 version = "0.23.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -588,6 +598,7 @@ dependencies = [
  "serde_json",
  "who-core",
  "who-lang-go",
+ "who-lang-java",
  "who-lang-js",
  "who-lang-python",
  "who-lang-rust",
@@ -613,6 +624,16 @@ dependencies = [
  "anyhow",
  "tree-sitter",
  "tree-sitter-go",
+ "who-core",
+]
+
+[[package]]
+name = "who-lang-java"
+version = "0.0.26"
+dependencies = [
+ "anyhow",
+ "tree-sitter",
+ "tree-sitter-java",
  "who-core",
 ]
 
